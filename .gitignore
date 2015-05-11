@@ -1,0 +1,33 @@
+*.DS_Store
+
+# RStudio files
+*.Rproj.user
+
+# History files
+*.Rhistory
+*.RData
+*.Rapp.history
+
+# Cache
+*.rdb
+*.rdx
+
+
+# Output files
+
+*.html
+*.pdf
+*.docx
+*.png
+
+
+# Packrat
+
+packrat/lib*/
+packrat/src/
+.Rproj.user
+
+# Data
+
+/data
+/output
