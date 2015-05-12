@@ -16,9 +16,9 @@ lw = 1.0
 
 width = 5
 height = 3
-bottom = 0.25
+bottom = 0.3
 left = 0.7
-top = 0.1
+top = 0.15
 right = 0.2
 
 cols = [
@@ -70,6 +70,18 @@ class File:
         ii = [ self.map[h] for h in hh ]
         return [ [ r[i] for i in ii ] for r in self.rows ]
 
+    def hash(self, h):
+        i = self.map[h]
+        self.index = {}
+        for r in self.rows:
+            key = r[i]
+            assert i not in self.index
+            self.index[key] = r
+
+    def get_field(self, key, h):
+        i = self.map[h]
+        return self.index[key][i]
+
 
 def read(filename):
     with open(filename) as f:
@@ -79,16 +91,16 @@ def read(filename):
     return fi
 
 
-def get_results(terms):
+def get_hits(terms):
     files = glob.glob('../dhh15/ceec-normalised/*.txt')
     keys = []
     for i,f in enumerate(files):
         head, tail = os.path.split(f)
         base, ext = os.path.splitext(tail)
         keys.append(base)
-    results = {}
+    hits = {}
     for key in keys:
-        results[key] = []
+        hits[key] = []
     for term in terms:
         out = subprocess.check_output(['gegrep', '-c', '-i', '--', term] + files)
         rows = out.split('\n')
@@ -99,69 +111,142 @@ def get_results(terms):
             expect = files[i] + ':'
             assert row.startswith(expect)
             result = int(row[len(expect):].rstrip())
-            results[key].append(result)
-    return results
+            hits[key].append(result)
+    return hits
 
 
-def process(terms, results, by_year):
-    years = []
-    for r in by_year:
-        year, key, sender, recipient, wc = r
-        years.append(year)
+def prettydescr(descr):
+    if len(descr) == 0:
+        return 'all'
+    else:
+        return ', '.join(descr)
 
+
+def process(terms, hits, descr, data):
+    years = [ r[0] for r in data ]
     m = len(terms)
     n = len(years)
-    normss = []
-    normss.append(np.array(range(n))/float(n))
+    result = []
+    result.append(np.array(range(n))/float(n))
     for j in range(m):
-        hits = []
-        for r in by_year:
-            year, key, sender, recipient, wc = r
-            hit = results[key][j] > 0
-            hits.append(hit)
-        hits = np.array(hits)
-        cumhits = np.cumsum(hits)
-        norms = cumhits / float(cumhits[-1])
-        normss.append(norms)
-        print('{}: {}'.format(terms[j], cumhits[-1]))
+        hitl = []
+        for r in data:
+            key = r[1]
+            hit = hits[key][j] > 0
+            hitl.append(hit)
+        hitl = np.array(hitl)
+        cumhits = np.cumsum(hitl)
+        normalised = cumhits / float(cumhits[-1])
+        result.append(normalised)
+        print '{}, {}: {}'.format(terms[j], prettydescr(descr), cumhits[-1])
         sys.stdout.flush()
+    return result
 
-    return years, normss
 
+def plot(plotname, resultlist):
+    yearrange = []
+    for descr, data, result in resultlist:
+        years = [ r[0] for r in data ]
+        yearrange.append(min(years))
+        yearrange.append(max(years))
+    minyear = min(yearrange)
+    maxyear = max(yearrange)
+    yearspan = maxyear - minyear
+    yearmargin = 0.05*yearspan
 
-def plot(plotname, years, normss):
+    nf = len(resultlist)
+    fheight = nf * height
     SPP = matplotlib.figure.SubplotParams(
         left=left/width, right=1.0 - right/width,
-        bottom=bottom/height, top=1.0 - top/height,
+        bottom=bottom/fheight, top=1.0 - top/fheight,
+        hspace=nf*(top+bottom)/fheight,
     )
-    fig = matplotlib.pyplot.figure(figsize=(width, height), subplotpars=SPP)
-    ax = fig.add_subplot(111)
-    yearspan = max(years) - min(years)
-    yearmargin = 0.05*yearspan
-    ax.set_xlim((min(years) - yearmargin, max(years) + yearmargin))
-    ax.set_ylim((-0.05, +1.05))
-    for j,yy in enumerate(normss):
-        col = cols[j % len(cols)]
-        ax.plot(years, yy, color=col)
+    fig = matplotlib.pyplot.figure(figsize=(width, fheight), subplotpars=SPP)
+    for i,to_plot in enumerate(resultlist):
+        descr, data, result = to_plot
+        ax = fig.add_subplot(nf, 1, 1 + i)
+        ax.set_xlim((minyear - yearmargin, maxyear + yearmargin))
+        ax.set_ylim((-0.05, +1.05))
+        xx = [ r[0] for r in data ]
+        for j,yy in enumerate(result):
+            col = cols[j % len(cols)]
+            ax.plot(xx, yy, color=col)
     fig.savefig(plotname)
     matplotlib.pyplot.close(fig)
 
 
-def driver(plotname, terms):
-    print(plotname)
-    results = get_results(terms)
+def read_input():
     letter = read('../dhh15/ceec-metadata/database_letter.txt')
     person = read('../dhh15/ceec-metadata/database_person.txt')
     letter.numeric(['Year', 'WordCount'])
-    by_year = letter.columns(['Year', 'LetterID', 'Sender', 'Recipient', 'WordCount'])
-    by_year = sorted(by_year)
-    years, normss = process(terms, results, by_year)
-    plot(plotname, years, normss)
+    person.hash('PersonCode')
+    return letter, person
 
+
+def driver(constraints, plotname, terms):
+    print plotname
+    hits = get_hits(terms)
+    letter, person = read_input()
+    datalist = initial_data(letter, person)
+    for c in constraints:
+        newdatalist = []
+        for descr, data in datalist:
+            newdatalist.extend(c(descr, data, letter, person))
+        datalist = newdatalist
+    resultlist = []
+    for descr, data in datalist:
+        result = process(terms, hits, descr, data)
+        resultlist.append((descr, data, result))
+    plot(plotname, resultlist)
+
+
+def initial_data(letter, person):
+    datalist = []
+    descr = []
+    data = letter.columns(['Year', 'LetterID', 'Sender', 'Recipient'])
+    data = sorted(data)
+    datalist.append((descr, data))
+    return datalist
+
+
+def c_sender(field, values):
+    def filter_sender(descr0, data0, letter, person):
+        datalist = []
+        for cond, label in values:
+            descr = descr0 + [label]
+            data = []
+            for year, key, sender, recipient in data0:
+                if cond(person.get_field(sender, field)):
+                    data.append([year, key, sender, recipient])
+            datalist.append((descr, data))
+        return datalist
+    return filter_sender
+
+
+def eq(y):
+    return lambda x: x == y
+
+def neq(y):
+    return lambda x: x != y
+
+
+CONSTRAINT = {
+    '-sex': c_sender('Sex', [(eq('F'), 'female'), (eq('M'), 'male')]),
+    '-region': c_sender('Region', [(eq('L'), 'London'), (neq('L'), 'other')]),
+}
 
 def main():
-    plotname = sys.argv[1]
-    terms = sys.argv[2:]
-    driver(plotname, terms)
+    myname = sys.argv[0]
+    args = sys.argv[1:]
+    constraints = []
+    while len(args) > 0 and args[0].startswith('-'):
+        c = args.pop(0)
+        if c not in CONSTRAINT:
+            sys.exit('unknown option: {}'.format(c))
+        constraints.append(CONSTRAINT[c])
+    if len(args) < 2:
+        sys.exit('usage: {} [CONSTRAINT] ... PLOTNAME REGEX ...'.format(myname))
+    plotname = args.pop(0)
+    driver(constraints, plotname, args)
 
 main()
