@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Assumtion:
+# Assumption:
 # ../dhh15 = input data from https://bitbucket.org/suomela/dhh15
 
 mkdir -p plot || exit 1
