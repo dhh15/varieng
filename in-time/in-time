@@ -3,7 +3,6 @@
 import colorsys
 import glob
 import math
-import multiprocessing
 import os.path
 import subprocess
 import sys
