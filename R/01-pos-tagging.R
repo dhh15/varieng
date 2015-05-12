@@ -47,6 +47,7 @@ texts <- filenames %>%
 
 # Remove metadata, numbers, and punctuation
 texts <- lapply(texts, function(x){
+    x = gsub("\\[\\{(.*?)\\{\\]", "\\1", x)
     x = gsub("<[^>]+>","", x)
     x = gsub("\\[.*?\\]", "", x)
     x = gsub("}\\]", "", x)
