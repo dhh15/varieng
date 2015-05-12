@@ -137,7 +137,10 @@ def process(terms, hits, descr, data):
         hitl = np.array(hitl)
         cumhits = np.cumsum(hitl)
         total = cumhits[-1]
-        normalised = cumhits / float(total)
+        if total > 0:
+            normalised = cumhits / float(total)
+        else:
+            normalised = cumhits
         result.append((terms[j], total, normalised))
     return result
 
