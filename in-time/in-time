@@ -7,10 +7,10 @@ import multiprocessing
 import os.path
 import subprocess
 import sys
-# import numpy
-# import matplotlib
-# matplotlib.use('Agg')
-# import matplotlib.pyplot
+import numpy as np
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot
 
 font = 12.0
 lw = 1.0
@@ -22,22 +22,24 @@ left = 0.7
 top = 0.1
 right = 0.2
 
-cola = colorsys.hsv_to_rgb(20.0/360.0, 0.90, 1.00)
-colb = colorsys.hsv_to_rgb(230.0/360.0, 0.85, 0.85)
-white = '#ffffff'
+cols = [
+    '#000000',
+    colorsys.hsv_to_rgb(20.0/360.0, 0.90, 1.00),
+    colorsys.hsv_to_rgb(230.0/360.0, 0.85, 0.85),
+]
 
-# matplotlib.rcParams.update({
-#     "font.size": font,
-#     "legend.fontsize": font,
-#     "font.family": "sans-serif",
-#     "mathtext.default": "it",
-#     "lines.linewidth": lw,
-#     "patch.linewidth": lw,
-#     "lines.markeredgewidth": lw,
-#     "axes.linewidth": lw,
-#     "axes.titlesize": font,
-#     "axes.labelsize": font,
-# })
+matplotlib.rcParams.update({
+    "font.size": font,
+    "legend.fontsize": font,
+    "font.family": "sans-serif",
+    "mathtext.default": "it",
+    "lines.linewidth": lw,
+    "patch.linewidth": lw,
+    "lines.markeredgewidth": lw,
+    "axes.linewidth": lw,
+    "axes.titlesize": font,
+    "axes.labelsize": font,
+})
 
 
 def parse(l):
@@ -111,9 +113,43 @@ def main(terms):
     letter.numeric(['Year', 'WordCount'])
     by_year = letter.columns(['Year', 'LetterID', 'Sender', 'Recipient', 'WordCount'])
     by_year = sorted(by_year)
+
+    years = []
     for r in by_year:
-        pass
-        # print(r)
+        year, key, sender, recipient, wc = r
+        years.append(year)
+
+    m = len(terms)
+    n = len(years)
+    normss = []
+    normss.append(np.array(range(n))/float(n))
+    for j in range(m):
+        hits = []
+        for r in by_year:
+            year, key, sender, recipient, wc = r
+            hit = results[key][j] > 0
+            hits.append(hit)
+        hits = np.array(hits)
+        cumhits = np.cumsum(hits)
+        norms = cumhits / float(cumhits[-1])
+        normss.append(norms)
+        print('{}: {}'.format(terms[j], cumhits[-1]))
+
+    SPP = matplotlib.figure.SubplotParams(
+        left=left/width, right=1.0 - right/width,
+        bottom=bottom/height, top=1.0 - top/height,
+    )
+    fig = matplotlib.pyplot.figure(figsize=(width, height), subplotpars=SPP)
+    ax = fig.add_subplot(111)
+    yearspan = max(years) - min(years)
+    yearmargin = 0.05*yearspan
+    ax.set_xlim((min(years) - yearmargin, max(years) + yearmargin))
+    ax.set_ylim((-0.05, +1.05))
+    for j,yy in enumerate(normss):
+        col = cols[j % len(cols)]
+        ax.plot(years, yy, color=col)
+    fig.savefig('test.pdf')
+    matplotlib.pyplot.close(fig)
 
 
 terms = sys.argv[1:]
