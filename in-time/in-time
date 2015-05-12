@@ -82,7 +82,7 @@ def read(filename):
 
 
 def get_results(terms):
-    files = glob.glob('ceec-normalised/*.txt')
+    files = glob.glob('../dhh15/ceec-normalised/*.txt')
     keys = []
     for i,f in enumerate(files):
         head, tail = os.path.split(f)
@@ -108,8 +108,8 @@ def get_results(terms):
 
 def main(plotname, terms):
     results = get_results(terms)
-    letter = read('ceec-metadata/database_letter.txt')
-    person = read('ceec-metadata/database_person.txt')
+    letter = read('../dhh15/ceec-metadata/database_letter.txt')
+    person = read('../dhh15/ceec-metadata/database_person.txt')
     letter.numeric(['Year', 'WordCount'])
     by_year = letter.columns(['Year', 'LetterID', 'Sender', 'Recipient', 'WordCount'])
     by_year = sorted(by_year)
