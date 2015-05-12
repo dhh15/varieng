@@ -22,9 +22,10 @@ top = 0.15
 right = 0.2
 
 cols = [
-    '#000000',
+    '#808080',
     colorsys.hsv_to_rgb(20.0/360.0, 0.90, 1.00),
     colorsys.hsv_to_rgb(230.0/360.0, 0.85, 0.85),
+    '#000000',
 ]
 
 matplotlib.rcParams.update({
