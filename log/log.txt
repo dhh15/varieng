@@ -4,3 +4,7 @@ plot/scotl-engl.pdf
 plot/scotl-scotx.pdf
 \<scotl: 99
 \<scot[^l]: 131
+plot/union.pdf
+\<union: 60
+plot/kingd.pdf
+\<kingd: 102
