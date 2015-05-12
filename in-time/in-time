@@ -29,7 +29,7 @@ cols = [
 
 matplotlib.rcParams.update({
     "font.size": font,
-    "legend.fontsize": font,
+    "legend.fontsize": 10,
     "font.family": "sans-serif",
     "mathtext.default": "it",
     "lines.linewidth": lw,
@@ -127,7 +127,7 @@ def process(terms, hits, descr, data):
     m = len(terms)
     n = len(years)
     result = []
-    result.append(np.array(range(n))/float(n))
+    result.append(('all', n, np.array(range(n))/float(n)))
     for j in range(m):
         hitl = []
         for r in data:
@@ -136,10 +136,9 @@ def process(terms, hits, descr, data):
             hitl.append(hit)
         hitl = np.array(hitl)
         cumhits = np.cumsum(hitl)
-        normalised = cumhits / float(cumhits[-1])
-        result.append(normalised)
-        print '{}, {}: {}'.format(terms[j], prettydescr(descr), cumhits[-1])
-        sys.stdout.flush()
+        total = cumhits[-1]
+        normalised = cumhits / float(total)
+        result.append((terms[j], total, normalised))
     return result
 
 
@@ -168,10 +167,17 @@ def plot(plotname, resultlist):
         ax.set_xlim((minyear - yearmargin, maxyear + yearmargin))
         ax.set_ylim((-0.05, +1.05))
         xx = [ r[0] for r in data ]
-        for j,yy in enumerate(result):
+        plots = []
+        legends = []
+        for j,oneresult in enumerate(result):
+            what, total, yy = oneresult
             col = cols[j % len(cols)]
-            ax.plot(xx, yy, color=col)
+            p, = ax.plot(xx, yy, color=col)
+            plots.append(p)
+            legends.append('{}: {}'.format(what, total))
         ax.text(minyear, 0.97, prettydescr(descr), verticalalignment='top')
+        leg = ax.legend(plots, legends, loc='lower right')
+        leg.get_frame().set_linewidth(0.0)
     fig.savefig(plotname)
     matplotlib.pyplot.close(fig)
 
@@ -185,7 +191,6 @@ def read_input():
 
 
 def driver(constraints, plotname, terms):
-    print plotname
     hits = get_hits(terms)
     letter, person = read_input()
     datalist = initial_data(letter, person)
@@ -232,8 +237,8 @@ def neq(y):
 
 
 CONSTRAINT = {
-    '-sex': c_sender('Sex', [(eq('F'), 'female'), (eq('M'), 'male')]),
-    '-region': c_sender('Region', [(eq('L'), 'London'), (neq('L'), 'other')]),
+    '-sex':    c_sender('Sex',    [ (eq('F'), 'female'), (eq('M'), 'male')   ]),
+    '-region': c_sender('Region', [ (eq('L'), 'London'), (neq('L'), 'other') ]),
 }
 
 def main():
@@ -248,6 +253,10 @@ def main():
     if len(args) < 2:
         sys.exit('usage: {} [CONSTRAINT] ... PLOTNAME REGEX ...'.format(myname))
     plotname = args.pop(0)
+    print '-{}'.format(plotname)
+    sys.stdout.flush()
     driver(constraints, plotname, args)
+    print '+{}'.format(plotname)
+    sys.stdout.flush()
 
 main()
