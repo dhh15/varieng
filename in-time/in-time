@@ -103,14 +103,7 @@ def get_results(terms):
     return results
 
 
-def main(plotname, terms):
-    results = get_results(terms)
-    letter = read('../dhh15/ceec-metadata/database_letter.txt')
-    person = read('../dhh15/ceec-metadata/database_person.txt')
-    letter.numeric(['Year', 'WordCount'])
-    by_year = letter.columns(['Year', 'LetterID', 'Sender', 'Recipient', 'WordCount'])
-    by_year = sorted(by_year)
-
+def process(terms, results, by_year):
     years = []
     for r in by_year:
         year, key, sender, recipient, wc = r
@@ -133,6 +126,10 @@ def main(plotname, terms):
         print('{}: {}'.format(terms[j], cumhits[-1]))
         sys.stdout.flush()
 
+    return years, normss
+
+
+def plot(plotname, years, normss):
     SPP = matplotlib.figure.SubplotParams(
         left=left/width, right=1.0 - right/width,
         bottom=bottom/height, top=1.0 - top/height,
@@ -148,10 +145,23 @@ def main(plotname, terms):
         ax.plot(years, yy, color=col)
     fig.savefig(plotname)
     matplotlib.pyplot.close(fig)
+
+
+def driver(plotname, terms):
     print(plotname)
+    results = get_results(terms)
+    letter = read('../dhh15/ceec-metadata/database_letter.txt')
+    person = read('../dhh15/ceec-metadata/database_person.txt')
+    letter.numeric(['Year', 'WordCount'])
+    by_year = letter.columns(['Year', 'LetterID', 'Sender', 'Recipient', 'WordCount'])
+    by_year = sorted(by_year)
+    years, normss = process(terms, results, by_year)
+    plot(plotname, years, normss)
 
 
-plotname = sys.argv[1]
-terms = sys.argv[2:]
-main(plotname, terms)
+def main():
+    plotname = sys.argv[1]
+    terms = sys.argv[2:]
+    driver(plotname, terms)
 
+main()
