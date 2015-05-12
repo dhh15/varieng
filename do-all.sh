@@ -15,6 +15,8 @@ bin/in-time -region plot-scotland/scotl-engl-region.pdf '\<scotl' '\<engl' &
 bin/in-time -region plot-scotland/union-region.pdf '\<union' &
 bin/in-time -sex plot-scotland/scotl-engl-sex.pdf '\<scotl' '\<engl' &
 bin/in-time -sex plot-scotland/union-sex.pdf '\<union' &
+bin/in-time plot-scotland/king-queen.pdf '\<king' '\<queen' &
+bin/in-time -region plot-scotland/king-queen-region.pdf '\<king' '\<queen' &
 
 bin/in-time plot-language/hath-has.pdf '\<hath\>' '\<has\>' &
 bin/in-time -region plot-language/hath-has-region.pdf '\<hath\>' '\<has\>' &
