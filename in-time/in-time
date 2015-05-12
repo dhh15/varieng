@@ -1,0 +1,87 @@
+#!/usr/bin/env python
+
+from collections import defaultdict
+import os.path
+import multiprocessing
+import glob
+import math
+import colorsys
+# import numpy
+# import matplotlib
+# matplotlib.use('Agg')
+# import matplotlib.pyplot
+
+SRCDIR = '../../dhh15'
+MDDIR = os.path.join(SRCDIR, 'ceec-metadata')
+
+font = 12.0
+lw = 1.0
+
+width = 5
+height = 3
+bottom = 0.25
+left = 0.7
+top = 0.1
+right = 0.2
+
+cola = colorsys.hsv_to_rgb(20.0/360.0, 0.90, 1.00)
+colb = colorsys.hsv_to_rgb(230.0/360.0, 0.85, 0.85)
+white = '#ffffff'
+
+# matplotlib.rcParams.update({
+#     "font.size": font,
+#     "legend.fontsize": font,
+#     "font.family": "sans-serif",
+#     "mathtext.default": "it",
+#     "lines.linewidth": lw,
+#     "patch.linewidth": lw,
+#     "lines.markeredgewidth": lw,
+#     "axes.linewidth": lw,
+#     "axes.titlesize": font,
+#     "axes.labelsize": font,
+# })
+
+
+def parse(l):
+    return l.rstrip('\r\n').split('\t')
+
+
+class File:
+    def __init__(self, head):
+        self.head = head
+        self.rows = []
+        self.map = {}
+        for i,h in enumerate(head):
+            assert h not in self.map
+            self.map[h] = i
+
+    def write(self, filename):
+        with open(filename, 'w') as f:
+            writeline(f, self.head)
+            for r in self.rows:
+                writeline(f, r)
+
+    def columns(self, hh):
+        ii = [ self.map[h] for h in hh ]
+        return [ [ r[i] for i in ii ] for r in self.rows ]
+
+
+def read(filename):
+    with open(filename) as f:
+        fi = File(parse(f.readline()))
+        for l in f:
+            fi.rows.append(parse(l))
+    return fi
+
+
+def main():
+    letter = read(os.path.join(MDDIR, 'database_letter.txt'))
+    person = read(os.path.join(MDDIR, 'database_person.txt'))
+    by_year = letter.columns(["Year", "LetterID", "Sender", "Recipient", "WordCount"])
+    by_year = sorted(by_year)
+    for r in by_year:
+        print(r)
+
+
+main()
+
