@@ -8,3 +8,7 @@ plot/union.pdf
 \<union: 60
 plot/kingd.pdf
 \<kingd: 102
+plot/brit.pdf
+\<brit: 119
+plot/pretender.pdf
+\<pretender\>: 22

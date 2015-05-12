@@ -11,3 +11,5 @@ in-time/in-time plot/scotl-engl.pdf '\<scotl' '\<engl' | tee -a $log
 in-time/in-time plot/scotl-scotx.pdf '\<scotl' '\<scot[^l]' | tee -a $log
 in-time/in-time plot/union.pdf '\<union' | tee -a $log
 in-time/in-time plot/kingd.pdf '\<kingd' | tee -a $log
+in-time/in-time plot/brit.pdf '\<brit' | tee -a $log
+in-time/in-time plot/pretender.pdf '\<pretender\>' | tee -a $log
