@@ -73,7 +73,6 @@ class File:
 
 
 def read(filename):
-    print('Reading: {}'.format(filename))
     with open(filename) as f:
         fi = File(parse(f.readline()))
         for l in f:
@@ -92,7 +91,6 @@ def get_results(terms):
     for key in keys:
         results[key] = []
     for term in terms:
-        print('Finding: {}'.format(term))
         out = subprocess.check_output(['gegrep', '-c', '-i', '--', term] + files)
         rows = out.split('\n')
         assert(len(rows) == len(files) + 1)
@@ -134,6 +132,7 @@ def main(plotname, terms):
         norms = cumhits / float(cumhits[-1])
         normss.append(norms)
         print('{}: {}'.format(terms[j], cumhits[-1]))
+        sys.stdout.flush()
 
     SPP = matplotlib.figure.SubplotParams(
         left=left/width, right=1.0 - right/width,
@@ -150,6 +149,7 @@ def main(plotname, terms):
         ax.plot(years, yy, color=col)
     fig.savefig(plotname)
     matplotlib.pyplot.close(fig)
+    print(plotname)
 
 
 plotname = sys.argv[1]

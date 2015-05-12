@@ -1,0 +1,6 @@
+\<scotl: 99
+\<engl: 788
+plot/scotl-engl.pdf
+\<scotl: 99
+\<scot[^l]: 131
+plot/scotl-scotx.pdf
