@@ -171,6 +171,7 @@ def plot(plotname, resultlist):
         for j,yy in enumerate(result):
             col = cols[j % len(cols)]
             ax.plot(xx, yy, color=col)
+        ax.text(minyear, 0.97, prettydescr(descr), verticalalignment='top')
     fig.savefig(plotname)
     matplotlib.pyplot.close(fig)
 
