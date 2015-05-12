@@ -12,9 +12,6 @@ import sys
 # matplotlib.use('Agg')
 # import matplotlib.pyplot
 
-SRCDIR = '../../dhh15'
-MDDIR = os.path.join(SRCDIR, 'ceec-metadata')
-
 font = 12.0
 lw = 1.0
 
@@ -74,6 +71,7 @@ class File:
 
 
 def read(filename):
+    print('Reading: {}'.format(filename))
     with open(filename) as f:
         fi = File(parse(f.readline()))
         for l in f:
@@ -81,14 +79,41 @@ def read(filename):
     return fi
 
 
+def get_results(terms):
+    files = glob.glob('ceec-normalised/*.txt')
+    keys = []
+    for i,f in enumerate(files):
+        head, tail = os.path.split(f)
+        base, ext = os.path.splitext(tail)
+        keys.append(base)
+    results = {}
+    for key in keys:
+        results[key] = []
+    for term in terms:
+        print('Finding: {}'.format(term))
+        out = subprocess.check_output(['gegrep', '-c', '-i', '--', term] + files)
+        rows = out.split('\n')
+        assert(len(rows) == len(files) + 1)
+        assert(rows[-1] == '')
+        for i,key in enumerate(keys):
+            row = rows[i]
+            expect = files[i] + ':'
+            assert row.startswith(expect)
+            result = int(row[len(expect):].rstrip())
+            results[key].append(result)
+    return results
+
+
 def main(terms):
-    letter = read(os.path.join(MDDIR, 'database_letter.txt'))
-    person = read(os.path.join(MDDIR, 'database_person.txt'))
+    results = get_results(terms)
+    letter = read('ceec-metadata/database_letter.txt')
+    person = read('ceec-metadata/database_person.txt')
     letter.numeric(['Year', 'WordCount'])
     by_year = letter.columns(['Year', 'LetterID', 'Sender', 'Recipient', 'WordCount'])
     by_year = sorted(by_year)
     for r in by_year:
-        print(r)
+        pass
+        # print(r)
 
 
 terms = sys.argv[1:]
