@@ -106,7 +106,7 @@ def get_results(terms):
     return results
 
 
-def main(terms):
+def main(plotname, terms):
     results = get_results(terms)
     letter = read('ceec-metadata/database_letter.txt')
     person = read('ceec-metadata/database_person.txt')
@@ -148,10 +148,11 @@ def main(terms):
     for j,yy in enumerate(normss):
         col = cols[j % len(cols)]
         ax.plot(years, yy, color=col)
-    fig.savefig('test.pdf')
+    fig.savefig(plotname)
     matplotlib.pyplot.close(fig)
 
 
-terms = sys.argv[1:]
-main(terms)
+plotname = sys.argv[1]
+terms = sys.argv[2:]
+main(plotname, terms)
 
