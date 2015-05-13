@@ -7,6 +7,7 @@
 *.Rhistory
 *.RData
 *.Rapp.history
+*.Rout
 
 # Cache
 *.rdb
