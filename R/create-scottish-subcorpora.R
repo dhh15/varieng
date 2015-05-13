@@ -1,9 +1,9 @@
 #########################################################################################
-# File:   create-scottish-subcorpora.R                                                           # 
+# File:   create-scottish-subcorpora.R                                                  # 
 # Date:   2015-05-13                                                                    #
 # Author: Joseph Flanagan                                                               #
 # email:  joseph.flanagan@helsinki.fi                                                   #
-# Purpose: create the Scottish subcorpora for shiny app                                          #                           
+# Purpose: create the Scottish subcorpora for shiny app                                 #                           
 #########################################################################################
 
 #  Be sure to run pos-tagging.R and export-semiclean-ceec.R before running this script
