@@ -8,8 +8,23 @@
 
 # This really should be converted to function and more variables rather than listing everything
 
-# Get file names from a subdirectory
-filenames <- Sys.glob("data/austen/*.txt")
+library("magrittr")
+library("NLP")
+
+# Read in letter database
+database_letter <- read.delim("data/metadata/database_letter.txt")
+
+
+# Select letters written by george 3
+george3 <- database_letter %>%
+    filter(Sender == "GEORGE3") %>%
+    select(LetterID) 
+
+# Append .tex at the end
+filenames <- lapply(george3$LetterID,function(x) paste0(x,'.txt'))
+
+# Preface with directory path
+filenames <- lapply(filenames, function(x) paste0("output/semicleaned-data/", x))
 
 
 # Read in files
@@ -24,5 +39,5 @@ text <- toString(texts)
 
 
 # Print to shiny directory
-writeLines(text, "shiny/austen.txt")
+writeLines(text, "shiny/defoe.txt")
 
