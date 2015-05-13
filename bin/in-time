@@ -260,10 +260,21 @@ def eq(y):
 def neq(y):
     return lambda x: x != y
 
+def isin(l):
+    return lambda x: x in l
+
+def notin(l):
+    return lambda x: x not in l
+
+
+
+gentry = set(['R', 'N', 'GU', 'GL', 'GL?', 'G', 'G?'])
+nongentry = set(['P', 'CU', 'CL', 'M', 'O', 'O?'])
 
 CONSTRAINT = {
     '-sex':    c_sender('Sex',    [ (eq('F'), 'female'), (eq('M'), 'male')   ]),
     '-region': c_sender('Region', [ (eq('L'), 'London'), (neq('L'), 'other') ]),
+    '-gentry': c_sender('Rank',   [ (isin(gentry), 'gentry'), (isin(nongentry), 'non-gentry') ]),
 }
 
 def main():
