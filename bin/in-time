@@ -12,6 +12,9 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot
 
+LETTER_DIR = 'output/semicleaned-data'
+METADATA_DIR = 'data/ceec-metadata'
+
 ROBUSTNESS = 1
 
 font = 12.0
@@ -98,7 +101,7 @@ def read(filename):
 
 
 def get_hits(terms):
-    files = glob.glob('output/semicleaned-data/*.txt')
+    files = glob.glob(os.path.join(LETTER_DIR, '*.txt'))
     keys = []
     for i,f in enumerate(files):
         head, tail = os.path.split(f)
@@ -208,8 +211,8 @@ def plot(plotname, resultlist):
 
 
 def read_input():
-    letter = read('../dhh15/ceec-metadata/database_letter.txt')
-    person = read('../dhh15/ceec-metadata/database_person.txt')
+    letter = read(os.path.join(METADATA_DIR, 'database_letter.txt'))
+    person = read(os.path.join(METADATA_DIR, 'database_person.txt'))
     letter.numeric(['Year', 'WordCount'])
     person.hash('PersonCode')
     return letter, person
