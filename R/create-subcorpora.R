@@ -16,12 +16,12 @@ database_letter <- read.delim("data/metadata/database_letter.txt")
 
 
 # Select letters written by george 3
-george3 <- database_letter %>%
-    filter(Sender == "GEORGE3") %>%
+ecarter <- database_letter %>%
+    filter(Sender == "ECARTER") %>%
     select(LetterID) 
 
 # Append .tex at the end
-filenames <- lapply(george3$LetterID,function(x) paste0(x,'.txt'))
+filenames <- lapply(ecarter$LetterID,function(x) paste0(x,'.txt'))
 
 # Preface with directory path
 filenames <- lapply(filenames, function(x) paste0("output/semicleaned-data/", x))
@@ -39,5 +39,5 @@ text <- toString(texts)
 
 
 # Print to shiny directory
-writeLines(text, "shiny/defoe.txt")
+writeLines(text, "shiny/ecarter.txt")
 
