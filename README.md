@@ -1,7 +1,7 @@
 # varieng
 GitHub area for code and other stuff relating to the English language variation theme
 
-The shiny app was produced by running the following scripts in this order: 
+The data for the shiny app was produced by running the following scripts in this order: 
 
 1. export-semiclean-ceec.R
 2. create-subcorpora.R
