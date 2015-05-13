@@ -8,7 +8,6 @@
 #########################################################################################
 
 library("NLP")
-library("openNLP")
 library("magrittr")
 
 # Get files from subdirectory (warning: imports all files in the subdirectory)
@@ -39,14 +38,7 @@ texts <- lapply(texts, function(x){
 names(texts) <- basename(filenames)
 
 
-# Convert to base r string (since NLP strings won't export)
-texts <- lapply(texts, function(x){
-    x = toString(x)
-    x
-})
-
-
 # Export to clean-data subdirectory
 for (i in 1:length(texts)) {
-    write.csv(texts[i], file=paste0("output/cleaned-data/", names(texts)[i]))
+    cat(toString(texts[i]), file=paste0("output/cleaned-data/", names(texts)[i]))
 }
