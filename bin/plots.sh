@@ -5,6 +5,10 @@
 
 mkdir -p plot-scotland plot-language || exit 1
 
+bin/in-time plot-scotland/scot.pdf '\<scot' &
+bin/in-time -sex plot-scotland/scot-sex.pdf '\<scot' &
+bin/in-time -region plot-scotland/scot-region.pdf '\<scot' &
+bin/in-time -sex -region plot-scotland/scot-sex-region.pdf '\<scot' &
 bin/in-time plot-scotland/scotl-engl.pdf '\<scotl' '\<engl' &
 bin/in-time plot-scotland/scotl-scotx.pdf '\<scotl' '\<scot[^l]' &
 bin/in-time plot-scotland/union.pdf '\<union' &
