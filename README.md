@@ -5,7 +5,8 @@ The data for the shiny app was produced by the following steps:
 
 1. Create a `data/` directory in the root directory of the project
 2. Place the `ceec-normalised/` directory in the `data/` directory
-3. Run the `export-semiclean-ceec.R` script in the `R/` directory 
-4. Run the `create-subcorpora.R` script in the `R/` directory
+3. Run the `pos-tagging.R` script in the `R/` directory 
+4. Run the `export-semiclean-ceec.R` script in the `R/` directory
+5. Run the `create-scottish-subcorpora.R` script in the `R/` directory
 
-(create-subcorpora.R will ultimately be converted into a function. Right now, the letter writer needs to be entered at several different points in the script)
+(The scripts used to produce this data should be rewritten to be more streamlined)
