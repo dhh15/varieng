@@ -6,20 +6,17 @@ library(memoise)
 
 
 # The list of valid letters
-letters <- list("Joseph Addison" = "addison",
-               "Jane Austen" = "austen",
-               "Daniel Defoe" = "defoe",
-               "George III" = "george3",
-               "Elizabeth Carter" = "ecarter")
+years <- list("Before 1707" = "before",
+               "After 1707" = "after")
 
 # Using "memoise" to automatically cache the results
-getTermMatrix <- memoise(function(letter) {
+getTermMatrix <- memoise(function(year) {
     # Careful not to let just any name slip in here; a
     # malicious user could manipulate this value.
-    if (!(letter %in% letters))
-        stop("Unknown letter")
+    if (!(year %in% years))
+        stop("Unknown year")
     
-    text <- readLines(sprintf("./%s.txt", letter),
+    text <- readLines(sprintf("./%s.txt", year),
                       encoding="UTF-8")
     
     my_corpus = Corpus(VectorSource(text))
