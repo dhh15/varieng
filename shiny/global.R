@@ -8,7 +8,9 @@ library(memoise)
 # The list of valid letters
 letters <- list("Joseph Addison" = "addison",
                "Jane Austen" = "austen",
-               "Daniel Defoe" = "defoe")
+               "Daniel Defoe" = "defoe",
+               "George III" = "george3",
+               "Elizabeth Carter" = "ecarter")
 
 # Using "memoise" to automatically cache the results
 getTermMatrix <- memoise(function(letter) {
