@@ -98,7 +98,7 @@ def read(filename):
 
 
 def get_hits(terms):
-    files = glob.glob('../dhh15/ceec-normalised/*.txt')
+    files = glob.glob('output/semicleaned-data/*.txt')
     keys = []
     for i,f in enumerate(files):
         head, tail = os.path.split(f)
