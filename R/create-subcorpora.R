@@ -15,7 +15,7 @@ library("NLP")
 database_letter <- read.delim("data/metadata/database_letter.txt")
 
 
-# Select letters written by george 3
+# Select letters written by ecarter
 ecarter <- database_letter %>%
     filter(Sender == "ECARTER") %>%
     select(LetterID) 
