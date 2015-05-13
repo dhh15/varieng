@@ -1,6 +1,6 @@
 fluidPage(
     # Application title
-    titlePanel("Word Cloud"),
+    titlePanel("DH Hackathon"),
     
     sidebarLayout(
         # Sidebar with a slider and selection inputs
@@ -15,10 +15,12 @@ fluidPage(
             sliderInput("max",
                         "Maximum Number of Words:",
                         min = 1,  max = 300,  value = 100)
+            
         ),
         
         # Show Word Cloud
         mainPanel(
+            h2("Word Cloud", align = "center"),
             plotOutput("plot")
         )
     )
