@@ -130,19 +130,16 @@ def process(terms, hits, descr, data):
     result = []
     result.append(('all', n, np.array(range(n))/float(n)))
     for j in range(m):
-        hitl = []
-        for r in data:
-            key = r[1]
-            hit = hits[key][j] > 0
-            hitl.append(hit)
-        hitl = np.array(hitl)
-        cumhits = np.cumsum(hitl)
-        total = cumhits[-1]
+        cum0 = []
+        total = 0
+        for year, key, sender, recipient in data:
+            if hits[key][j] > 0:
+                total += 1
+            cum0.append(float(total))
+        cum0 = np.array(cum0)
         if total > 0:
-            normalised = cumhits / float(total)
-        else:
-            normalised = cumhits
-        result.append((terms[j], total, normalised))
+            cum0 /= total
+        result.append((terms[j], total, cum0))
     return result
 
 
