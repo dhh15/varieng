@@ -30,3 +30,4 @@ packrat/src/
 
 /data
 /output
+shiny/*.txt
