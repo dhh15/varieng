@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import collections
 import colorsys
 import glob
 import math
@@ -11,6 +12,8 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot
 
+ROBUSTNESS = 1
+
 font = 12.0
 lw = 1.0
 
@@ -21,6 +24,8 @@ left = 0.7
 top = 0.15
 right = 0.2
 
+alpha1 = 0.2
+alpha2 = 0.2
 cols = [
     '#808080',
     colorsys.hsv_to_rgb(20.0/360.0, 0.90, 1.00),
@@ -123,23 +128,33 @@ def prettydescr(descr):
         return ', '.join(descr)
 
 
-def process(terms, hits, descr, data):
+def process_column(term, hits, data, j):
+    cum = [ [] for l in range(ROBUSTNESS+1) ]
+    individual = collections.Counter()
+    total = 0
+    for year, key, sender, recipient in data:
+        if j is None or hits[key][j] > 0:
+            total += 1
+            individual[sender] += 1
+        for i in range(ROBUSTNESS+1):
+            top = sum([count for key,count in individual.most_common(i)])
+            cum[i].append(float(total - top))
+    assert cum[0][-1] == total
+    for i in range(ROBUSTNESS+1):
+        cum[i] = np.array(cum[i])
+        if total > 0:
+            cum[i] /= total
+    return (term, total, cum)
+
+
+def process_data(terms, hits, data):
     years = [ r[0] for r in data ]
     m = len(terms)
     n = len(years)
     result = []
-    result.append(('all', n, np.array(range(n))/float(n)))
+    result.append(process_column('all', hits, data, None))
     for j in range(m):
-        cum0 = []
-        total = 0
-        for year, key, sender, recipient in data:
-            if hits[key][j] > 0:
-                total += 1
-            cum0.append(float(total))
-        cum0 = np.array(cum0)
-        if total > 0:
-            cum0 /= total
-        result.append((terms[j], total, cum0))
+        result.append(process_column(terms[j], hits, data, j))
     return result
 
 
@@ -170,8 +185,17 @@ def plot(plotname, resultlist):
         xx = [ r[0] for r in data ]
         plots = []
         legends = []
+        for i in reversed(range(ROBUSTNESS)):
+            alpha = alpha1 + (ROBUSTNESS - i - 1) * alpha2
+            for j,oneresult in enumerate(result):
+                what, total, yyy = oneresult
+                yy0 = yyy[i+1]
+                yy1 = yyy[i]
+                col = cols[j % len(cols)]
+                ax.fill_between(xx, yy0, yy1, color=col, edgecolor="none", alpha=alpha)
         for j,oneresult in enumerate(result):
-            what, total, yy = oneresult
+            what, total, yyy = oneresult
+            yy = yyy[0]
             col = cols[j % len(cols)]
             p, = ax.plot(xx, yy, color=col)
             plots.append(p)
@@ -202,7 +226,7 @@ def driver(constraints, plotname, terms):
         datalist = newdatalist
     resultlist = []
     for descr, data in datalist:
-        result = process(terms, hits, descr, data)
+        result = process_data(terms, hits, data)
         resultlist.append((descr, data, result))
     plot(plotname, resultlist)
 
