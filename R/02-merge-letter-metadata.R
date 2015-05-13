@@ -17,7 +17,7 @@ tagged_corpus <- tagged_corpus %>%
     separate(text_id, c("LetterID", "junk"), -5) %>%
     select(-junk)
 
-database_letter <- read.delim("data/ceec-metadata/database_letter.txt")
+database_letter <- read.delim("data/metadata/database_letter.txt")
 
 letter <- database_letter %>%
     select(LetterID, SenderFirstName, SenderLastName, SenderRank, RecipientFirstName, RecipientLastName, RecRank, RelCode, Year)
