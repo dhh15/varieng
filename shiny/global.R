@@ -8,8 +8,9 @@ library(RColorBrewer)
 
 
 # The list of valid letters
-years <- list("Before 1707" = "before",
-               "After 1707" = "after")
+years <- list("Before 1700" = "period1",
+              "1700-1719" = "period2",
+               "After 1719" = "period3")
 
 # Using "memoise" to automatically cache the results
 getTermMatrix <- memoise(function(year) {
