@@ -5,6 +5,8 @@
 
 mkdir -p plot-scotland plot-language || exit 1
 
+bin/in-time -print -sex plot-scotland/queen-sex.txt '\<queen' &
+
 bin/in-time plot-scotland/scot.pdf '\<scot' &
 bin/in-time -sex plot-scotland/scot-sex.pdf '\<scot' &
 bin/in-time -region plot-scotland/scot-region.pdf '\<scot' &
@@ -30,6 +32,7 @@ bin/in-time plot-scotland/brit.pdf '\<brit' &
 bin/in-time plot-scotland/pretender.pdf '\<pretender\>' &
 
 bin/in-time plot-scotland/king-queen.pdf '\<king' '\<queen' &
+bin/in-time -sex plot-scotland/king-queen-sex.pdf '\<king' '\<queen' &
 bin/in-time -region plot-scotland/king-queen-region.pdf '\<king' '\<queen' &
 bin/in-time -gentry plot-scotland/king-queen-gentry.pdf '\<king' '\<queen' &
 
