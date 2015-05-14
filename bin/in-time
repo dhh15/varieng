@@ -38,7 +38,7 @@ cols = [
 
 matplotlib.rcParams.update({
     "font.size": font,
-    "legend.fontsize": 8,
+    "legend.fontsize": font,
     "font.family": "sans-serif",
     "mathtext.default": "it",
     "lines.linewidth": lw,
@@ -166,14 +166,14 @@ def process_column(term, hits, data, j):
     return (term, total, cum)
 
 
-def process_data(terms, hits, data):
+def process_data(termlabels, hits, data):
     years = [ r[0] for r in data ]
-    m = len(terms)
+    m = len(termlabels)
     n = len(years)
     result = []
     result.append(process_column('all', hits, data, None))
     for j in range(m):
-        result.append(process_column(terms[j], hits, data, j))
+        result.append(process_column(termlabels[j], hits, data, j))
     return result
 
 
@@ -234,7 +234,7 @@ def read_input():
     return letter, person
 
 
-def driver(justprint, constraints, filename, terms):
+def driver(justprint, constraints, filename, terms, termlabels):
     hits = get_hits(terms)
     letter, person = read_input()
     datalist = initial_data(letter, person)
@@ -244,11 +244,11 @@ def driver(justprint, constraints, filename, terms):
             newdatalist.extend(c(descr, data, letter, person))
         datalist = newdatalist
     if justprint:
-        textoutput(filename, terms, hits, datalist)
+        textoutput(filename, termlabels, hits, datalist)
     else:
         resultlist = []
         for descr, data in datalist:
-            result = process_data(terms, hits, data)
+            result = process_data(termlabels, hits, data)
             resultlist.append((descr, data, result))
         else:
             plot(filename, resultlist)
@@ -315,9 +315,22 @@ CONSTRAINT = {
     '-period': c_year([(1700, 1719), (1720, 1739)]),
 }
 
+
+def usage():
+    myname = sys.argv[0]
+    print 'Wrong arguments.'
+    print
+    print 'Usage:'
+    print '  {}        [CONSTRAINT] ... FILENAME.pdf REGEX1 LABEL1 [REGEX2 LABEL2] ...'.format(myname)
+    print '  {} -print [CONSTRAINT] ... FILENAME.txt REGEX1 LABEL1 [REGEX2 LABEL2] ...'.format(myname)
+    print
+    print 'CONSTRAINT is one of the following:'
+    print '  {}'.format(' '.join(sorted(CONSTRAINT.keys())))
+    print
+    sys.exit(1)
+
 def main():
     justprint = False
-    myname = sys.argv[0]
     args = sys.argv[1:]
     constraints = []
     while len(args) > 0 and args[0].startswith('-'):
@@ -329,11 +342,18 @@ def main():
         else:
             constraints.append(CONSTRAINT[c])
     if len(args) < 2:
-        sys.exit('usage: {} [-print] [CONSTRAINT] ... FILENAME REGEX ...'.format(myname))
+        usage()
     filename = args.pop(0)
+    terms = []
+    termlabels = []
+    while len(args) >= 2:
+        terms.append(args.pop(0))
+        termlabels.append(args.pop(0))
+    if len(args) > 0:
+        usage()
     print '-{}'.format(filename)
     sys.stdout.flush()
-    driver(justprint, constraints, filename, args)
+    driver(justprint, constraints, filename, terms, termlabels)
     print '+{}'.format(filename)
     sys.stdout.flush()
 
