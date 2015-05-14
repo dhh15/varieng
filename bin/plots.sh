@@ -41,6 +41,7 @@ bin/in-time -gentry         plot-language/hath-has-gentry.pdf       '\<hath\>' '
 bin/in-time -sex -region    plot-language/hath-has-sex-region.pdf   '\<hath\>' 'hath' '\<has\>' 'has' &
 
 bin/in-time -swap           plot-language/hospital.pdf              '\<hospital\>' 'hospital' &
+bin/in-time -swap           plot-language/newspaper.pdf              '\<newspaper' 'newspaper...' &
 
 
 wait
