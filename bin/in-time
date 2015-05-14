@@ -38,7 +38,7 @@ cols = [
 
 matplotlib.rcParams.update({
     "font.size": font,
-    "legend.fontsize": 10,
+    "legend.fontsize": 8,
     "font.family": "sans-serif",
     "mathtext.default": "it",
     "lines.linewidth": lw,
