@@ -1,5 +1,5 @@
 #########################################################################################
-# File:   create-period-subcorpora.R                                                  # 
+# File:   create-period-subcorpora.R                                                    # 
 # Date:   2015-05-13                                                                    #
 # Author: Joseph Flanagan                                                               #
 # email:  joseph.flanagan@helsinki.fi                                                   #
@@ -8,9 +8,9 @@
 
 #  Be sure to run pos-tagging.R and export-semiclean-ceec.R before running this script
 
-# This really should be converted to function and more variables rather than listing everything
+# This really should be converted to a function rather than repeating all these actions
 
-# eventually create new script rather than pos-tagging.R
+# eventually create new script instead of using pos-tagging.R
 
 library("magrittr")
 library("NLP")
@@ -130,5 +130,5 @@ texts <- filenames %>%
 text <- toString(texts)
 
 
-# Print to shiny directory (change to relevant directory)
+# Print to shiny directory
 writeLines(text, "shiny/period3.txt")
