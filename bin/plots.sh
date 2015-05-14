@@ -5,13 +5,17 @@
 
 mkdir -p plot-scotland plot-language || exit 1
 
-bin/in-time -print -sex plot-scotland/queen-sex.txt '\<queen' &
+scot='\<scot(\>|[^t]\>|[a-z][a-z])'
 
-bin/in-time plot-scotland/scot.pdf '\<scot' &
-bin/in-time -sex plot-scotland/scot-sex.pdf '\<scot' &
-bin/in-time -region plot-scotland/scot-region.pdf '\<scot' &
-bin/in-time -gentry plot-scotland/scot-gentry.pdf '\<scot' &
-bin/in-time -sex -region plot-scotland/scot-sex-region.pdf '\<scot' &
+bin/in-time -print -sex plot-scotland/queen-sex.txt '\<queen' &
+bin/in-time -print -period plot-scotland/scot-period.txt "$scot" &
+
+bin/in-time plot-scotland/scot.pdf "$scot" &
+bin/in-time -sex plot-scotland/scot-sex.pdf "$scot" &
+bin/in-time -region plot-scotland/scot-region.pdf "$scot" &
+bin/in-time -gentry plot-scotland/scot-gentry.pdf "$scot" &
+bin/in-time -sex -region plot-scotland/scot-sex-region.pdf "$scot" &
+bin/in-time -sex -gentry plot-scotland/scot-sex-gentry.pdf "$scot" &
 
 bin/in-time plot-scotland/scotl-engl.pdf '\<scotl' '\<engl' &
 bin/in-time -sex plot-scotland/scotl-engl-sex.pdf '\<scotl' '\<engl' &
