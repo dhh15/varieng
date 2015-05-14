@@ -1,0 +1,23 @@
+# all mentions of england and scotland in letters
+cat $(egrep -li '\<england\>' $(egrep -li '\<scotland\>' *))
+egrep -li england $(egrep -li scotland *)
+
+# create a file
+ " > {your file name here}"
+
+# make directory
+ mkdir {file name here}
+
+# move file to another location
+ cp $(cat ../FILENAME) ../LOCATION
+
+# list contents (read what's in the location)
+ ls
+
+# save all hits into a file
+ egrep -li '\<england\>' $(egrep -li '\<scotland\>' *) > ../FILENAME
+egrep -li '\<Scotland\>’ * ../Scotland
+
+# search for files with WORD and count instances, make a copy of numbers to clipboard
+egrep -ci '\<WORD’ *.txt | cut -f2 -d: | pbcopy
+
