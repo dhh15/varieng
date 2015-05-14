@@ -177,7 +177,7 @@ def process_data(termlabels, hits, data):
     return result
 
 
-def plot(plotname, resultlist):
+def plot(opt, plotname, resultlist):
     yearrange = []
     for descr, data, result in resultlist:
         years = [ r[0] for r in data ]
@@ -219,8 +219,12 @@ def plot(plotname, resultlist):
             p, = ax.plot(xx, yy, color=col)
             plots.append(p)
             legends.append('{}: {}'.format(what, total))
-        ax.text(minyear, 0.97, prettydescr(descr), verticalalignment='top')
-        leg = ax.legend(plots, legends, loc='lower right')
+        if opt.swap:
+            ax.text(maxyear, 0.00, prettydescr(descr), verticalalignment='bottom', horizontalalignment='right')
+            leg = ax.legend(plots, legends, loc='upper left')
+        else:
+            ax.text(minyear, 0.97, prettydescr(descr), verticalalignment='top')
+            leg = ax.legend(plots, legends, loc='lower right')
         leg.get_frame().set_linewidth(0.0)
     fig.savefig(plotname)
     matplotlib.pyplot.close(fig)
@@ -234,7 +238,7 @@ def read_input():
     return letter, person
 
 
-def driver(justprint, constraints, filename, terms, termlabels):
+def driver(opt, constraints, filename, terms, termlabels):
     hits = get_hits(terms)
     letter, person = read_input()
     datalist = initial_data(letter, person)
@@ -243,7 +247,7 @@ def driver(justprint, constraints, filename, terms, termlabels):
         for descr, data in datalist:
             newdatalist.extend(c(descr, data, letter, person))
         datalist = newdatalist
-    if justprint:
+    if opt.justprint:
         textoutput(filename, termlabels, hits, datalist)
     else:
         resultlist = []
@@ -251,7 +255,7 @@ def driver(justprint, constraints, filename, terms, termlabels):
             result = process_data(termlabels, hits, data)
             resultlist.append((descr, data, result))
         else:
-            plot(filename, resultlist)
+            plot(opt, filename, resultlist)
 
 
 def initial_data(letter, person):
@@ -321,22 +325,35 @@ def usage():
     print 'Wrong arguments.'
     print
     print 'Usage:'
-    print '  {}        [CONSTRAINT] ... FILENAME.pdf REGEX1 LABEL1 [REGEX2 LABEL2] ...'.format(myname)
-    print '  {} -print [CONSTRAINT] ... FILENAME.txt REGEX1 LABEL1 [REGEX2 LABEL2] ...'.format(myname)
+    print '  {} [OPTION] ... [CONSTRAINT] ... FILENAME REGEX1 LABEL1 [REGEX2 LABEL2] ...'.format(myname)
+    print
+    print 'OPTION is one of the following:'
+    print
+    print '  -print: produce plain text output'
+    print '          (default: produce PDF output)'
+    print
+    print '  -swap: swap label placement'
     print
     print 'CONSTRAINT is one of the following:'
     print '  {}'.format(' '.join(sorted(CONSTRAINT.keys())))
     print
     sys.exit(1)
 
+class Options:
+    pass
+
 def main():
-    justprint = False
+    opt = Options()
+    opt.justprint = False
+    opt.swap = False
     args = sys.argv[1:]
     constraints = []
     while len(args) > 0 and args[0].startswith('-'):
         c = args.pop(0)
         if c == '-print':
-            justprint = True
+            opt.justprint = True
+        elif c == '-swap':
+            opt.swap = True
         elif c not in CONSTRAINT:
             sys.exit('unknown option: {}'.format(c))
         else:
@@ -353,7 +370,7 @@ def main():
         usage()
     print '-{}'.format(filename)
     sys.stdout.flush()
-    driver(justprint, constraints, filename, terms, termlabels)
+    driver(opt, constraints, filename, terms, termlabels)
     print '+{}'.format(filename)
     sys.stdout.flush()
 
