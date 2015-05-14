@@ -29,7 +29,7 @@ tagged_corpus <- tagged_corpus %>%
     select(-junk)
 
 # read in letter database
-database_letter <- read.delim("data/metadata/database_letter.txt")
+database_letter <- read.delim("data/ceec-metadata/database_letter.txt")
 
 # select relevant columns
 letter <- database_letter %>%
