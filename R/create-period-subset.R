@@ -48,14 +48,15 @@ scotland2  <- scotland %>%
     group_by(LetterID) %>%
     filter(row_number(LetterID) == 1)
 
-# 1700:1719
 
-years1 <- scotland2 %>%
-    filter(Year %in% c(1700:1719)) %>%
+# BEFORE 1700
+
+period1 <- scotland2 %>%
+    filter(Year < 1700) %>%
     select(LetterID)
 
 # Append .tex at the end
-filenames <- lapply(years1$LetterID,function(x) paste0(x,'.txt'))
+filenames <- lapply(period1$LetterID,function(x) paste0(x,'.txt'))
 
 # Preface with directory path
 filenames <- lapply(filenames, function(x) paste0("output/semicleaned-data/", x))
@@ -73,4 +74,59 @@ text <- toString(texts)
 
 
 # Print to shiny directory (change to relevant directory)
-#writeLines(text, "shiny/years1.txt")
+writeLines(text, "shiny/period1.txt")
+
+
+# 1700:1719
+
+period2 <- scotland2 %>%
+    filter(Year %in% c(1700:1719)) %>%
+    select(LetterID)
+
+# Append .tex at the end
+filenames <- lapply(period2$LetterID,function(x) paste0(x,'.txt'))
+
+# Preface with directory path
+filenames <- lapply(filenames, function(x) paste0("output/semicleaned-data/", x))
+
+
+# Read in files
+texts <- filenames %>%
+    lapply(readLines) %>%
+    lapply(paste0, collapse = " ") %>%
+    lapply(as.String) 
+
+
+# Convert to base R string
+text <- toString(texts)
+
+
+# Print to shiny directory (change to relevant directory)
+writeLines(text, "shiny/period2.txt")
+
+## AfTER 1719
+
+period3 <- scotland2 %>%
+    filter(Year > 1719) %>%
+    select(LetterID)
+
+# Append .tex at the end
+filenames <- lapply(period3$LetterID,function(x) paste0(x,'.txt'))
+
+# Preface with directory path
+filenames <- lapply(filenames, function(x) paste0("output/semicleaned-data/", x))
+
+
+# Read in files
+texts <- filenames %>%
+    lapply(readLines) %>%
+    lapply(paste0, collapse = " ") %>%
+    lapply(as.String) 
+
+
+# Convert to base R string
+text <- toString(texts)
+
+
+# Print to shiny directory (change to relevant directory)
+writeLines(text, "shiny/period3.txt")
