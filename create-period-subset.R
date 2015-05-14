@@ -72,5 +72,5 @@ texts <- filenames %>%
 text <- toString(texts)
 
 
-# Print to shiny directory
-writeLines(text, "shiny/years1.txt")
+# Print to shiny directory (change to relevant directory)
+#writeLines(text, "shiny/years1.txt")
