@@ -2,6 +2,7 @@ library(tm)
 library(wordcloud)
 library(memoise)
 library(shiny)
+library(RColorBrewer)
 
 # Place data in the same directory
 
