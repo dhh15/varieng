@@ -5,7 +5,8 @@ GitHub area for code and other stuff relating to the English language variation 
 The data for the shiny app was produced by the following steps:
 
 1. Create a `data/` directory in the root directory of the project
-2. Place the `ceec-normalised/` directory in the `data/` directory
+2. Download the `ceec-normalised/` directory and place it in the `data/` directory
+3. Download the `ceec-metadata/` directory and place it in the `data/` directory
 3. Run the `pos-tagging.R` script in the `R/` directory 
 4. Run the `export-semiclean-ceec.R` script in the `R/` directory
 5. Run the `create-scottish-subcorpora.R` script in the `R/` directory
