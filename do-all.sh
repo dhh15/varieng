@@ -8,3 +8,4 @@ ln -s ../dhh15 data
 
 bin/preprocess.sh || exit 1
 bin/plots.sh || exit 1
+bin/subcorpus.sh || exit 1
