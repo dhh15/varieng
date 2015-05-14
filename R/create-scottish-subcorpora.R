@@ -16,6 +16,7 @@ library("magrittr")
 library("NLP")
 library("dplyr")
 library("tidyr")
+library("stringr")
 
 
 # Read in corpus
@@ -40,8 +41,11 @@ corpus <- tagged_corpus %>%
 
 
 # Select letters containing Scotand, Scottish, Scots, or Scot
-scotland <- corpus %>%
-    filter(word %in% c("scotland", "scottish", "scots", "scot", "scotsman", "scotswoman", "scottland", "scotch", "scotchw", "scotchm", "scotchman", "scotchmen", "scotchs", "scotia", "scotiae", "scotsw", "scotticisme"))
+
+scotland <- corpus %>% 
+    filter(str_detect(word, "^scot"))  %>% 
+    filter(word != "scott", word != "scotchcollops")
+
 
 # Remove duplicates so that we get each letter once 
 scotland2  <- scotland %>%
