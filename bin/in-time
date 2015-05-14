@@ -16,6 +16,7 @@ LETTER_DIR = 'output/semicleaned-data'
 METADATA_DIR = 'data/ceec-metadata'
 
 ROBUSTNESS = 1
+ROBUST_KIND = set(['sender', 'collection'])
 
 font = 12.0
 lw = 1.0
@@ -133,7 +134,7 @@ def textoutput(filename, terms, hits, datalist):
     fi = File(['Subcorpus', 'Term', 'Hits', 'Year', 'LetterID', 'Sender', 'Recipient'])
     for descr, data in datalist:
         for j, term in enumerate(terms):
-            for year, key, sender, recipient in data:
+            for year, key, sender, recipient, collection in data:
                 h = hits[key][j];
                 if h > 0:
                     fi.rows.append([prettydescr(descr), term, h, year, key, sender, recipient])
@@ -151,10 +152,15 @@ def process_column(term, hits, data, j):
     cum = [ [] for l in range(ROBUSTNESS+1) ]
     individual = collections.Counter()
     total = 0
-    for year, key, sender, recipient in data:
+    for year, key, sender, recipient, collection in data:
         if j is None or hits[key][j] > 0:
             total += 1
-            individual[sender] += 1
+            if 'collection' in ROBUST_KIND:
+                individual['c.' + collection] += 1
+            if 'sender' in ROBUST_KIND:
+                individual['s.' + sender] += 1
+            if 'recipient' in ROBUST_KIND:
+                individual['r.' + recipient] += 1
         for i in range(ROBUSTNESS+1):
             top = sum([count for key,count in individual.most_common(i)])
             cum[i].append(float(total - top))
@@ -261,7 +267,7 @@ def driver(opt, constraints, filename, terms, termlabels):
 def initial_data(letter, person):
     datalist = []
     descr = []
-    data = letter.columns(['Year', 'LetterID', 'Sender', 'Recipient'])
+    data = letter.columns(['Year', 'LetterID', 'Sender', 'Recipient', 'Collection'])
     data = sorted(data)
     datalist.append((descr, data))
     return datalist
@@ -273,9 +279,9 @@ def c_sender(field, values):
         for cond, label in values:
             descr = descr0 + [label]
             data = []
-            for year, key, sender, recipient in data0:
+            for year, key, sender, recipient, collection in data0:
                 if cond(person.get_field(sender, field)):
-                    data.append([year, key, sender, recipient])
+                    data.append([year, key, sender, recipient, collection])
             datalist.append((descr, data))
         return datalist
     return filter_sender
@@ -287,9 +293,9 @@ def c_year(ranges):
         for a, b in ranges:
             descr = descr0 + ['{}-{}'.format(a, b)]
             data = []
-            for year, key, sender, recipient in data0:
+            for year, key, sender, recipient, collection in data0:
                 if a <= year <= b:
-                    data.append([year, key, sender, recipient])
+                    data.append([year, key, sender, recipient, collection])
             datalist.append((descr, data))
         return datalist
     return filter_sender
