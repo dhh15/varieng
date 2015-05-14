@@ -1,6 +1,7 @@
 library(tm)
 library(wordcloud)
 library(memoise)
+library(shiny)
 
 # Place data in the same directory
 
