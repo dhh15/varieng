@@ -24,15 +24,19 @@ bin/in-time -print  -sex    plot-scotland/queen-sex.txt         '\<queen' 'queen
 bin/in-time                 plot-scotland/union.pdf             '\<union' 'union...' &
 bin/in-time -print          plot-scotland/union.txt             '\<union' 'union...' &
 
-bin/in-time                 plot-scotland/engl.pdf              '\<engl' 'engl...' &
-bin/in-time                 plot-scotland/brit.pdf              '\<brit' 'brit...' &
-bin/in-time                 plot-scotland/king.pdf              '\<king' 'king...' &
-bin/in-time                 plot-scotland/pretender.pdf         '\<pretender\>' 'pretender' &
+bin/in-time plot-scotland/engl.pdf                      '\<engl' 'engl...' &
+bin/in-time plot-scotland/brit.pdf                      '\<brit' 'brit...' &
+bin/in-time plot-scotland/king.pdf                      '\<king' 'king...' &
+bin/in-time plot-scotland/pretender.pdf                 '\<pretender\>' 'pretender' &
+bin/in-time -swap plot-scotland/protestant-catholic.pdf '\<protestant' 'protestant...' '\<catholic' 'catholic' &
+bin/in-time plot-scotland/tory-whig.pdf                 '\<tory\>' 'tory...' '\<whig\>' 'whig' &
+bin/in-time -swap plot-scotland/unite-america.pdf       '\<unite' 'unite...' '\<america' 'america...' &
 
 bin/in-time                 plot-language/hath-has.pdf              '\<hath\>' 'hath' '\<has\>' 'has' &
 bin/in-time -sex            plot-language/hath-has-sex.pdf          '\<hath\>' 'hath' '\<has\>' 'has' &
 bin/in-time -region         plot-language/hath-has-region.pdf       '\<hath\>' 'hath' '\<has\>' 'has' &
 bin/in-time -gentry         plot-language/hath-has-gentry.pdf       '\<hath\>' 'hath' '\<has\>' 'has' &
 bin/in-time -sex -region    plot-language/hath-has-sex-region.pdf   '\<hath\>' 'hath' '\<has\>' 'has' &
+
 
 wait
