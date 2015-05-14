@@ -9,7 +9,7 @@ The data for the shiny app was produced by the following steps:
 3. Download the `ceec-metadata/` directory and place it in the `data/` directory
 3. Run the `pos-tagging.R` script in the `R/` directory 
 4. Run the `export-semiclean-ceec.R` script in the `R/` directory
-5. Run the `create-scottish-subcorpora.R` script in the `R/` directory
+5. Run the `create-period-subcorpora.R` script in the `R/` directory
 
 (The scripts used to produce this data should be rewritten to be more streamlined)
 
