@@ -10,3 +10,5 @@ The data for the shiny app was produced by the following steps:
 5. Run the `create-scottish-subcorpora.R` script in the `R/` directory
 
 (The scripts used to produce this data should be rewritten to be more streamlined)
+
+To run the shiny app, simply type `runApp("shiny")` in the terminal (you may have to install some packages)
