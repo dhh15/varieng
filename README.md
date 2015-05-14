@@ -1,6 +1,7 @@
 # varieng
 GitHub area for code and other stuff relating to the English language variation theme
 
+## Shiny app
 The data for the shiny app was produced by the following steps:
 
 1. Create a `data/` directory in the root directory of the project
@@ -11,4 +12,4 @@ The data for the shiny app was produced by the following steps:
 
 (The scripts used to produce this data should be rewritten to be more streamlined)
 
-To run the shiny app, simply type `runApp("shiny")` in the R console window (you may have to install some packages)
+To run the shiny app, open `varieng.Rproj` and type `runApp("shiny")` in the R console window. If you receive an error message, check that `varieng` is the root directory. You may also have to install some packages. 
