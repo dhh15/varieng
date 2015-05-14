@@ -130,12 +130,13 @@ def get_hits(terms):
 
 
 def textoutput(filename, terms, hits, datalist):
-    fi = File(['Subcorpus', 'Term', 'Year', 'LetterID', 'Sender', 'Recipient'])
+    fi = File(['Subcorpus', 'Term', 'Hits', 'Year', 'LetterID', 'Sender', 'Recipient'])
     for descr, data in datalist:
         for j, term in enumerate(terms):
             for year, key, sender, recipient in data:
-                if hits[key][j] > 0:
-                    fi.rows.append([prettydescr(descr), term, year, key, sender, recipient])
+                h = hits[key][j];
+                if h > 0:
+                    fi.rows.append([prettydescr(descr), term, h, year, key, sender, recipient])
     fi.write(filename)
 
 
