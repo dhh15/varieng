@@ -117,7 +117,7 @@ def get_hits(terms):
     for key in keys:
         hits[key] = []
     for term in terms:
-        out = subprocess.check_output(['gegrep', '-c', '-i', '--', term] + files)
+        out = subprocess.check_output(['pcregrep', '--count', '--ignore-case', '--multiline', '--', term] + files)
         rows = out.split('\n')
         assert(len(rows) == len(files) + 1)
         assert(rows[-1] == '')
