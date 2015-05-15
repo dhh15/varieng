@@ -15,4 +15,4 @@ The data for the shiny app was produced by the following steps:
 
 To run the shiny app, open `varieng.Rproj` and type `runApp("shiny")` in the R console window. If you receive an error message, check that `varieng/` is the root directory. You may also have to install some packages. 
 
-The shiny app can be viewed [here]("https://jflanagan.shinyapps.io/shiny/")
+The shiny app can be viewed here(https://jflanagan.shinyapps.io/shiny/)
