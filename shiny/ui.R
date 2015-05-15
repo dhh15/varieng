@@ -20,7 +20,7 @@ fluidPage(
         
         # Show Word Cloud
         mainPanel(
-            h2("Word Cloud", align = "center"),
+            h2("Letters Related to Scotland", align = "center"),
             plotOutput("plot")
         )
     )
