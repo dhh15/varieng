@@ -40,8 +40,8 @@ bin/in-time -region         plot-language/hath-has-region.pdf       '\bhath\b' '
 bin/in-time -gentry         plot-language/hath-has-gentry.pdf       '\bhath\b' 'hath' '\bhas\b' 'has' &
 bin/in-time -sex -region    plot-language/hath-has-sex-region.pdf   '\bhath\b' 'hath' '\bhas\b' 'has' &
 
-bin/in-time -swap           plot-language/hospital.pdf              '\bhospital\b' 'hospital' &
-bin/in-time -swap           plot-language/newspaper.pdf              '\bnewspaper' 'newspaper...' &
+bin/in-time -swap plot-language/hospital.pdf  '\bhospital\b' 'hospital' &
+bin/in-time -swap plot-language/newspaper.pdf '\bnewspaper' 'newspaper...' '\bnews\W+paper' 'news paper...' &
 
 
 wait
