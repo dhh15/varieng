@@ -31,3 +31,6 @@ packrat/src/
 /data
 /output
 shiny/*.txt
+
+# Shiny
+/shiny/shinyapps
