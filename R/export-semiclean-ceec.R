@@ -20,12 +20,14 @@ texts <- filenames %>%
     lapply(paste0, collapse = "\n")
 
 
-# Remove metadata, numbers, and punctuation
+# Remove metadata, extract emendations, etc. 
 texts <- lapply(texts, function(x){
-    x = gsub("\\[\\{(.*?)\\{\\]", "\\1", x)
-    x = gsub("<[^>]+>","", x)
+    x = gsub("\\[\\{(.*?)\\{\\]", "\\1", x)         
+    x = gsub("\\[\\\\[A-Z]{2,}(.*?)\\\\\\]", "", x) 
+    x = gsub("\\[\\\\(.*?)\\\\\\]", "\\1", x)
+    x = gsub("<.*?>","", x)
     x = gsub("\\[.*?\\]", "", x)
-    x = gsub("}\\]", "", x)
+    x=  gsub("\\(\\^(.*?)\\^\\)", "\\1", x)
     x
 })
 

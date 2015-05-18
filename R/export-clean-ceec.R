@@ -24,10 +24,12 @@ texts <- filenames %>%
 
 # Remove metadata, numbers, and punctuation
 texts <- lapply(texts, function(x){
-    x = gsub("\\[\\{(.*?)\\{\\]", "\\1", x)
-    x = gsub("<[^>]+>","", x)
+    x = gsub("\\[\\{(.*?)\\{\\]", "\\1", x)         
+    x = gsub("\\[\\\\[A-Z]{2,}(.*?)\\\\\\]", "", x) 
+    x = gsub("\\[\\\\(.*?)\\\\\\]", "\\1", x)
+    x = gsub("<.*?>","", x)
     x = gsub("\\[.*?\\]", "", x)
-    x = gsub("}\\]", "", x)
+    x=  gsub("\\(\\^(.*?)\\^\\)", "\\1", x)
     x = gsub("\\d","", x) # get rid of numbers
     x = gsub("[^[:alnum:][:space:]']", "", x) # get rid of punctuation except for apostrophes
     x
