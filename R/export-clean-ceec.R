@@ -44,3 +44,8 @@ names(texts) <- basename(filenames)
 for (i in 1:length(texts)) {
     cat(toString(texts[i]), file=paste0("output/cleaned-data/", names(texts)[i]))
 }
+
+# Alternative means of exporting
+
+lapply(names(list), function(x){
+    cat(toString(list[[x]]), file = paste0("~/output/cleaned-data/", x, ".txt"))})
